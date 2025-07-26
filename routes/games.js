@@ -1,5 +1,16 @@
 import express from "express";
-import { getGame, getGames, addGame, updateGame, patchGame, deleteGame } from "../controllers/gameControllers.js";
+import { makeGameController } from "../controllers/gameController.js";
+import { Game } from "../models/Game.js";
+
+// Inject mongoose Game model into controller
+const {
+  getGames,
+  addGame,
+  getGame,
+  updateGame,
+  patchGame,
+  deleteGame
+} = makeGameController({ model: Game });
 
 const gamesRouter = express.Router();
 
