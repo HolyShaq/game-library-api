@@ -1,5 +1,23 @@
 import { Game } from "../models/Game.js";
 
+// Get game
+export const getGame = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const game = await Game.findById(id);
+
+    if (!game) {
+      return res.status(404).json({ message: "Game not found" });
+    }
+
+    res.json(game)
+  } catch (err) {
+    console.error(err.message)
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 // Get games with optional filters
 export const getGames = async (req, res) => {
   try {
