@@ -1,4 +1,4 @@
-import { Game } from "../models/Game";
+import { Game } from "../models/Game.js";
 
 // Get games with optional filters
 export const getGames = async (req, res) => {

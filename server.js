@@ -2,11 +2,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import express from "express";
+import gamesRouter from './routes/games.js';
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("Hello Worlds!");
-});
+app.use("/games", gamesRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
