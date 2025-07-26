@@ -1,0 +1,17 @@
+meta {
+  name: Create Game
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://{{baseUrl}}/games
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "Hollow Knight"
+  }
+}
