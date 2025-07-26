@@ -11,6 +11,7 @@ const gameSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+gameSchema.index({ title: "text" });
 gameSchema.index({ genre: 1, platform: 1 });
 
 export const Game = mongoose.model("Game", gameSchema);
