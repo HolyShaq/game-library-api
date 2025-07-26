@@ -5,13 +5,13 @@ meta {
 }
 
 get {
-  url: http://{{baseUrl}}/games?title=hollow
+  url: http://{{baseUrl}}/games
   body: none
   auth: inherit
 }
 
 params:query {
-  title: hollow
+  ~title: hollow
   ~genre: action
   ~platform: windows
   ~releaseYear: 2007
