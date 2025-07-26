@@ -30,7 +30,16 @@ export const getGames = async (req, res) => {
 
     const games = await query;
     res.json(games);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+};
 
+// Add game
+export const addGame = async (req, res) => {
+  try {
+    const game = await Game.create(req.body);
+    res.status(201).json({ message: "Game added successfully", game });
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }
