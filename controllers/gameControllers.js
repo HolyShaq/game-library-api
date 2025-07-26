@@ -87,7 +87,23 @@ export const patchGame = async (req, res) => {
 
     res.json({ message: "Updated game successfully", game: newGame });
   } catch (err) {
-    console.error(err)
     res.status(500).json({ error: "Server error" });
   }
-}
+};
+
+// Delete game
+export const deleteGame = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedGame = await Game.findByIdAndDelete(id);
+
+    if (!deletedGame) {
+      return res.status(404).json({ error: "Game not found" });
+    }
+
+    res.json({ message: "Deleted game successfully", game: deletedGame });
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+};
