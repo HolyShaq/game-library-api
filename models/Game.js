@@ -6,7 +6,7 @@ const gameSchema = new mongoose.Schema(
     genre: String,
     platform: String,
     releaseYear: { type: Number, index: true },
-    description: String,
+    description: { type: String, default: "" },
   },
   { timestamps: true },
 );
