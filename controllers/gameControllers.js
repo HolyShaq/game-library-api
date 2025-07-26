@@ -41,6 +41,9 @@ export const addGame = async (req, res) => {
     const game = await Game.create(req.body);
     res.status(201).json({ message: "Game added successfully", game });
   } catch (err) {
+    if (err.name === "ValidationError") {
+      return res.status(400).json({ error: err.message });
+    }
     res.status(500).json({ error: "Server error" });
   }
 };
