@@ -1,7 +1,7 @@
 import { Game } from "../models/Game.js";
 
 // Get game
-export const getGame = async (req, res) => {
+export const getGame = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -13,13 +13,12 @@ export const getGame = async (req, res) => {
 
     res.json(game)
   } catch (err) {
-    console.error(err.message)
-    res.status(500).json({ message: "Server error" });
+    next(err)
   }
 };
 
 // Get games with optional filters
-export const getGames = async (req, res) => {
+export const getGames = async (req, res, next) => {
   try {
     const { title, genre, platform, releaseYear } = req.query;
 
@@ -49,25 +48,22 @@ export const getGames = async (req, res) => {
     const games = await query;
     res.json(games);
   } catch (err) {
-    res.status(500).json({ error: "Server error" });
+    next(err)
   }
 };
 
 // Add game
-export const addGame = async (req, res) => {
+export const addGame = async (req, res, next) => {
   try {
     const game = await Game.create(req.body);
     res.status(201).json({ message: "Game added successfully", game });
   } catch (err) {
-    if (err.name === "ValidationError") {
-      return res.status(400).json({ error: err.message });
-    }
-    res.status(500).json({ error: "Server error" });
+    next(err)
   }
 };
 
 // Update game entirely
-export const updateGame = async (req, res) => {
+export const updateGame = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -82,15 +78,12 @@ export const updateGame = async (req, res) => {
 
     res.json({ message: "Updated game successfully", game: newGame });
   } catch (err) {
-    if (err.name === "ValidationError") {
-      return res.status(400).json({ error: err.message });
-    }
-    res.status(500).json({ error: "Server error" });
+    next(err)
   }
 };
 
 // Patch game
-export const patchGame = async (req, res) => {
+export const patchGame = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -105,12 +98,12 @@ export const patchGame = async (req, res) => {
 
     res.json({ message: "Updated game successfully", game: newGame });
   } catch (err) {
-    res.status(500).json({ error: "Server error" });
+    next(err)
   }
 };
 
 // Delete game
-export const deleteGame = async (req, res) => {
+export const deleteGame = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -122,6 +115,6 @@ export const deleteGame = async (req, res) => {
 
     res.json({ message: "Deleted game successfully", game: deletedGame });
   } catch (err) {
-    res.status(500).json({ error: "Server error" });
+    next(err)
   }
 };
