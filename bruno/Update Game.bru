@@ -1,0 +1,15 @@
+meta {
+  name: Update Game
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://{{baseUrl}}/games/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 68848ac9f0676459b9fb82fe
+}

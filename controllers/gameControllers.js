@@ -47,3 +47,26 @@ export const addGame = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+// Update game entirely
+export const updateGame = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const newGame = await Game.findOneAndReplace({ _id: id }, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!newGame) {
+      return res.status(404).json({ error: "Game not found" });
+    }
+
+    res.json({ message: "Updated game successfully", game: newGame });
+  } catch (err) {
+    if (err.name === "ValidationError") {
+      return res.status(400).json({ error: err.message });
+    }
+    res.status(500).json({ error: "Server error" });
+  }
+};
