@@ -8,6 +8,7 @@ import gamesRouter from './routes/games.js';
 mongoose.connect(process.env.MONGODB_URI);
 
 const app = express();
+app.use(express.json());
 app.use("/games", gamesRouter);
 
 const port = process.env.PORT || 3000;
