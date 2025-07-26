@@ -8,8 +8,7 @@ export const makeGameController = ({ model }) => ({
     try {
       const { id } = req.params;
       const game = await model.findById(id);
-      console.log(game);
-      if (!game) return res.status(404).json({ message: "Game not found" });
+      if (!game) throw new Error("GameNotExisting")
       res.status(200).json(game);
     } catch (err) {
       next(err);
