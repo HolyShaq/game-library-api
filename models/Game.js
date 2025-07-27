@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 const gameSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
-    genre: { type: String, default: "Unknown", trim: true },
-    platform: { type: String, default: "Unknown", trim: true },
+    genre: { type: String, default: "unknown", trim: true },
+    platform: { type: String, default: "unknown", trim: true },
     releaseYear: { type: Number, required: true, min: 1950, index: true },
     description: { type: String, default: "", trim: true },
   },
@@ -13,7 +13,6 @@ const gameSchema = new mongoose.Schema(
 
 gameSchema.index({ title: "text" });
 gameSchema.index({ genre: 1, platform: 1 });
-
 
 // Standardize genre and platform input
 gameSchema.pre("save", function (next) {
