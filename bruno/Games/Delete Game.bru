@@ -7,9 +7,13 @@ meta {
 delete {
   url: http://{{baseUrl}}/games/:id
   body: none
-  auth: inherit
+  auth: bearer
 }
 
 params:path {
   id: 68848abaf0676459b9fb82fc
+}
+
+auth:bearer {
+  token: {{accessToken}}
 }

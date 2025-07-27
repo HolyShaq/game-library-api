@@ -1,11 +1,10 @@
 import express from "express";
 import authRouter from "./auth.js";
 import gamesRouter from "./games.js";
-import authGuard from "../middleware/authGuard.js";
 
 export const apiRouter = express.Router();
 
 apiRouter.use("/auth", authRouter);
-apiRouter.use("/games", authGuard, gamesRouter);
+apiRouter.use("/games", gamesRouter);
 
 export default apiRouter;

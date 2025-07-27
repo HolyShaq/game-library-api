@@ -7,7 +7,11 @@ meta {
 post {
   url: http://{{baseUrl}}/games
   body: json
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
 }
 
 body:json {

@@ -7,11 +7,15 @@ meta {
 put {
   url: http://{{baseUrl}}/games/:id
   body: json
-  auth: inherit
+  auth: bearer
 }
 
 params:path {
   id: 6884b675891956209e1857b1
+}
+
+auth:bearer {
+  token: {{accessToken}}
 }
 
 body:json {

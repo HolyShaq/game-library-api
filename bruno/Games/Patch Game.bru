@@ -7,11 +7,15 @@ meta {
 patch {
   url: http://{{baseUrl}}/games/:id
   body: json
-  auth: inherit
+  auth: bearer
 }
 
 params:path {
   id: 68848ac9f0676459b9fb82fe
+}
+
+auth:bearer {
+  token: {{accessToken}}
 }
 
 body:json {
