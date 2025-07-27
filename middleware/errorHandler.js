@@ -8,6 +8,21 @@ const errorHandler = (err, _req, res, _next) => {
     message = "Game not found";
   }
 
+  if (err.message == "Unauthorized") {
+    statusCode = 401;
+    message = "Unauthorized";
+  }
+
+  if (err.name == "JsonWebTokenError") {
+    statusCode = 401;
+    message = "Invalid access token"
+  }
+
+  if (err.name == "TokenExpiredError") {
+    statusCode = 401;
+    message = "Access token expired"
+  }
+
   if (err.name == "ValidationError") {
     message = "Validation failed";
     statusCode = 400;
