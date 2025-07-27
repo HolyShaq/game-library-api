@@ -11,6 +11,8 @@ const authGuard = (req, _res, next) => {
     const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
     req.user = decoded;
+
+    next();
   } catch (error) {
     next(error);
   }
