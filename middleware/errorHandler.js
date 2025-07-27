@@ -10,7 +10,10 @@ const errorHandler = (err, _req, res, _next) => {
 
   if (err.message == "Unauthorized") {
     statusCode = 401;
-    message = "Unauthorized";
+  }
+
+  if (err.message == "Missing Refresh Token") {
+    statusCode = 401;
   }
 
   if (err.name == "JsonWebTokenError") {

@@ -3,6 +3,7 @@ dotenv.config();
 
 import express from "express";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 import apiRouter from "./routes/api.js";
 import logger from "./middleware/logger.js";
 import errorHandler from "./middleware/errorHandler.js";
@@ -19,6 +20,7 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(cookieParser());
 app.use(logger);
 
 // API Route

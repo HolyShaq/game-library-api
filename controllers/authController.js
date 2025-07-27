@@ -46,4 +46,32 @@ export const makeAuthController = ({ model }) => ({
       next(err);
     }
   },
+  refresh: async (req, res, next) => {
+    try {
+      const refreshToken = req.cookies.refreshToken;
+
+      if (!refreshToken) throw new Error("Missing refresh token");
+
+      // Verify if refresh token is valid
+      const decoded = jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET,
+      );
+
+      // Sanitize decoded payload
+      const payload = {
+        id: decoded.id,
+        username: decoded.username,
+        email: decoded.email,
+      };
+
+      // Generate a new access token with the payload
+      const accessToken = generateAccessToken(payload);
+
+      // Return the access token
+      res.status(200).json({ accessToken });
+    } catch (err) {
+      next(err);
+    }
+  },
 });
