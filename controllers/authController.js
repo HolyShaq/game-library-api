@@ -41,7 +41,7 @@ export const makeAuthController = ({ model }) => ({
         // Return created user with access token attached
         .json({
           message: "User registered successfully",
-          user,
+          payload,
           accessToken,
         });
     } catch (err) {
