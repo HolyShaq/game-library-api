@@ -1,3 +1,5 @@
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
 
 // Factory for an auth controller
@@ -46,6 +48,47 @@ export const makeAuthController = ({ model }) => ({
       next(err);
     }
   },
+
+  login: async (req, res, next) => {
+    try {
+      const { email, password } = req.body;
+
+      // Authenticate credentials
+      const user = await model.findOne({ email });
+      if (!user) throw new Error("Invalid credentials");
+
+      const validPassword = await bcrypt.compare(password, user.password);
+      if (!validPassword) throw new Error("Invalid credentials");
+
+      // Issue refresh and access tokens
+      const payload = {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      };
+      const accessToken = generateAccessToken(payload);
+      const refreshToken = generateRefreshToken(payload);
+
+      res
+        .status(200)
+
+        // Return refresh token as cookie
+        .cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+        })
+
+        // Return access token
+        .json({
+          message: `${user.username} logged in successfully`,
+          accessToken,
+        });
+    } catch (err) {
+      next(err);
+    }
+  },
+
   refresh: async (req, res, next) => {
     try {
       const refreshToken = req.cookies.refreshToken;

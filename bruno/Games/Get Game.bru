@@ -7,9 +7,13 @@ meta {
 get {
   url: http://{{baseUrl}}/games/:id
   body: none
-  auth: inherit
+  auth: bearer
 }
 
 params:path {
   id: 6884b675891956209e1857b1
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODYyNjk1YjY5NjBjMzgxMDZhMjU2NiIsInVzZXJuYW1lIjoiaG9seXNoYXEiLCJlbWFpbCI6ImFjZUBnbWFpbC5jb20iLCJpYXQiOjE3NTM2MjgwNDcsImV4cCI6MTc1MzYyODA1Mn0.POBI0tt8dczXyHynKC5GAjYw5xBq2wv4agyNB_JR7qc
 }
