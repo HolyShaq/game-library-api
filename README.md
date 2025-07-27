@@ -289,6 +289,15 @@ If you do have bruno, you can open the collection from the folder `/bruno` in th
     }
     ```
 
+## Testing
+This API has basic unit tests with partial integration for both authentication and game endpoints using Jest, mainly for demonstration.
+
+To run tests, run `npm test`.
+
+To run tests for the authentication endpoints, run `npm test authcontroller`.
+
+To run tests for the game endpoints, run `npm test gamecontroller`.
+
 ## Third-Party Packages Used
 
 - **express**: Web framework for Node.js.
