@@ -16,7 +16,9 @@ describe("getGame", () => {
         _id: "123",
         title: "Hollow Knight",
       };
-      mockGameModel.findById.mockResolvedValue(mockGame);
+      mockGameModel.findById.mockImplementation(() => ({
+        lean: jest.fn().mockResolvedValue(mockGame),
+      }));
 
       await gameController.getGame(req, res);
 
@@ -29,7 +31,9 @@ describe("getGame", () => {
       const res = fakeRes();
       const next = jest.fn();
 
-      mockGameModel.findById.mockResolvedValue(null);
+      mockGameModel.findById.mockImplementation(() => ({
+        lean: jest.fn().mockResolvedValue(null),
+      }));
 
       await gameController.getGame(req, res, next);
 
@@ -43,7 +47,9 @@ describe("getGame", () => {
       const res = {};
       const next = jest.fn();
 
-      mockGameModel.findById.mockRejectedValue(Error("CastError"));
+      mockGameModel.findById.mockImplementation(() => ({
+        lean: jest.fn().mockRejectedValue(Error("CastError")),
+      }));
 
       await gameController.getGame(req, res, next);
 
@@ -59,7 +65,7 @@ describe("addGame", () => {
       const req = { body: gameObject };
       const res = fakeRes();
 
-      mockGameModel.create.mockResolvedValue(gameObject);
+      mockGameModel.create.mockResolvedValue({ _doc: gameObject });
 
       await gameController.addGame(req, res);
 

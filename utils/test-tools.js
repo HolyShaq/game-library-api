@@ -12,13 +12,17 @@ export const fakeRes = () => ({
     return this;
   },
   cookie(data) {
-    return this
-  }
+    return this;
+  },
 });
 
 export const mockGameModel = {
-  findById: jest.fn(),
-  find: jest.fn(),
+  findById: jest.fn(() => ({
+    lean: jest.fn(),
+  })),
+  find: jest.fn(() => ({
+    lean: jest.fn(),
+  })),
   create: jest.fn(),
   findOneAndReplace: jest.fn(),
   findByIdAndUpdate: jest.fn(),
