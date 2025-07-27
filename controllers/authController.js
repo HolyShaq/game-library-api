@@ -1,3 +1,5 @@
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
+
 // Factory for an auth controller
 //    has a dependency injection for the model to be used
 //    returns an object containing the essential methods for CRUD
@@ -14,7 +16,22 @@ export const makeAuthController = ({ model }) => ({
 
       // Create new user
       const user = await model.create({ username, email, password });
-      res.status(201).json({ message: "User registered successfully", user });
+
+      // Issue refresh and access tokens
+      const payload = {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      };
+      const accessToken = generateAccessToken(payload);
+      const refreshToken = generateRefreshToken(payload);
+
+      res.status(201).json({
+        message: "User registered successfully",
+        user,
+        accessToken,
+        refreshToken,
+      });
     } catch (err) {
       next(err);
     }
