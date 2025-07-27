@@ -25,13 +25,24 @@ export const makeAuthController = ({ model }) => ({
       };
       const accessToken = generateAccessToken(payload);
       const refreshToken = generateRefreshToken(payload);
+      const cookieSettings = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+      };
 
-      res.status(201).json({
-        message: "User registered successfully",
-        user,
-        accessToken,
-        refreshToken,
-      });
+      res
+        .status(201)
+
+        // Return JWT tokens as cookies
+        .cookie("accessToken", accessToken, cookieSettings)
+        .cookie("refreshToken", refreshToken, cookieSettings)
+
+        // Return created user
+        .json({
+          message: "User registered successfully",
+          user,
+        });
     } catch (err) {
       next(err);
     }
