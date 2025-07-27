@@ -1,29 +1,9 @@
-import { beforeEach, describe, expect, jest } from "@jest/globals";
+import { describe, expect, jest } from "@jest/globals";
+import { mockGameModel, fakeRes } from "../utils/test-tools.js";
 import makeGameController from "./gameController.js";
 
-const mockGameModel = {
-  findById: jest.fn(),
-  find: jest.fn(),
-  create: jest.fn(),
-  findOneAndReplace: jest.fn(),
-  findByIdAndUpdate: jest.fn(),
-  findByIdAndDelete: jest.fn(),
-};
 const gameController = makeGameController({
   model: mockGameModel,
-});
-
-const fakeRes = () => ({
-  statusCode: 200,
-  body: null,
-  status(code) {
-    this.statusCode = code;
-    return this;
-  },
-  json(data) {
-    this.body = data;
-    return this;
-  },
 });
 
 describe("getGame", () => {
@@ -53,7 +33,7 @@ describe("getGame", () => {
 
       await gameController.getGame(req, res, next);
 
-      expect(next).toHaveBeenCalledWith(new Error("Game not found"));
+      expect(next).toHaveBeenCalledWith(Error("Game not found"));
     });
   });
 
@@ -63,11 +43,11 @@ describe("getGame", () => {
       const res = {};
       const next = jest.fn();
 
-      mockGameModel.findById.mockRejectedValue(new Error("CastError"));
+      mockGameModel.findById.mockRejectedValue(Error("CastError"));
 
       await gameController.getGame(req, res, next);
 
-      expect(next).toHaveBeenCalledWith(new Error("CastError"));
+      expect(next).toHaveBeenCalledWith(Error("CastError"));
     });
   });
 });
@@ -95,11 +75,11 @@ describe("addGame", () => {
       const res = fakeRes();
       const next = jest.fn();
 
-      mockGameModel.create.mockRejectedValue(new Error("ValidationError"));
-      
+      mockGameModel.create.mockRejectedValue(Error("ValidationError"));
+
       await gameController.addGame(req, res, next);
 
-      expect(next).toHaveBeenCalledWith(new Error("ValidationError"));
-    })
+      expect(next).toHaveBeenCalledWith(Error("ValidationError"));
+    });
   });
 });
