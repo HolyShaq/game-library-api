@@ -1,3 +1,5 @@
+import { cleanGame } from "../utils/cleaner.js";
+
 // Factory for a game model controller
 //    has a dependency injection for the model to be used
 //    returns an object containing the essential methods for CRUD
@@ -7,9 +9,10 @@ export const makeGameController = ({ model }) => ({
   getGame: async (req, res, next) => {
     try {
       const { id } = req.params;
-      const game = await model.findById(id);
-      if (!game) throw new Error("Game not found")
-      res.status(200).json(game);
+      const game = await model.findById(id).lean();
+      if (!game) throw new Error("Game not found");
+
+      res.status(200).json(cleanGame(game));
     } catch (err) {
       next(err);
     }
@@ -30,7 +33,7 @@ export const makeGameController = ({ model }) => ({
         if (!isNaN(parsedYear)) filter.releaseYear = parsedYear;
       }
 
-      let query = model.find(filter);
+      let query = model.find(filter).lean();
       if (title) {
         query = query
           .sort({ score: { $meta: "textScore" } })
@@ -40,7 +43,7 @@ export const makeGameController = ({ model }) => ({
       }
 
       const games = await query;
-      res.json(games);
+      res.json(games.map(cleanGame));
     } catch (err) {
       next(err);
     }
@@ -50,7 +53,9 @@ export const makeGameController = ({ model }) => ({
   addGame: async (req, res, next) => {
     try {
       const game = await model.create(req.body);
-      res.status(201).json({ message: "Game added successfully", game });
+      res
+        .status(201)
+        .json({ message: "Game added successfully", game: cleanGame(game._doc) });
     } catch (err) {
       next(err);
     }
@@ -60,12 +65,16 @@ export const makeGameController = ({ model }) => ({
   updateGame: async (req, res, next) => {
     try {
       const { id } = req.params;
-      const newGame = await model.findOneAndReplace({ _id: id }, req.body, {
-        new: true,
-        runValidators: true,
-      });
+      const newGame = await model
+        .findOneAndReplace({ _id: id }, req.body, {
+          new: true,
+          runValidators: true,
+        }).lean();
       if (!newGame) return res.status(404).json({ error: "Game not found" });
-      res.json({ message: "Updated game successfully", game: newGame });
+      res.json({
+        message: "Updated game successfully",
+        game: cleanGame(newGame),
+      });
     } catch (err) {
       next(err);
     }
@@ -78,9 +87,12 @@ export const makeGameController = ({ model }) => ({
       const newGame = await model.findByIdAndUpdate(id, req.body, {
         new: true,
         runValidators: true,
-      });
+      }).lean();
       if (!newGame) return res.status(404).json({ error: "Game not found" });
-      res.json({ message: "Updated game successfully", game: newGame });
+      res.json({
+        message: "Updated game successfully",
+        game: cleanGame(newGame),
+      });
     } catch (err) {
       next(err);
     }
@@ -90,10 +102,13 @@ export const makeGameController = ({ model }) => ({
   deleteGame: async (req, res, next) => {
     try {
       const { id } = req.params;
-      const deletedGame = await model.findByIdAndDelete(id);
+      const deletedGame = await model.findByIdAndDelete(id).lean();
       if (!deletedGame)
         return res.status(404).json({ error: "Game not found" });
-      res.json({ message: "Deleted game successfully", game: deletedGame });
+      res.json({
+        message: "Deleted game successfully",
+        game: cleanGame(deletedGame),
+      });
     } catch (err) {
       next(err);
     }
