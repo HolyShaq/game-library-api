@@ -13,50 +13,93 @@ const gameController = makeGameController({
   model: mockGameModel,
 });
 
-describe("game controller", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-  describe("given that a valid and existing id is given", () => {
-    const req = { params: { id: "123" } };
-    const res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
-    const next = jest.fn();
-    it("should give a proper game object", async () => {
+const fakeRes = () => ({
+  statusCode: 200,
+  body: null,
+  status(code) {
+    this.statusCode = code;
+    return this;
+  },
+  json(data) {
+    this.body = data;
+    return this;
+  },
+});
+
+describe("getGame", () => {
+  describe("given a valid id", () => {
+    it("should return a valid game object", async () => {
+      const req = { params: { _id: "123" } };
+      const res = fakeRes();
+
       const mockGame = {
         _id: "123",
-        title: "Outer Wilds",
-        releaseYear: 2007,
+        title: "Hollow Knight",
       };
       mockGameModel.findById.mockResolvedValue(mockGame);
 
-      await gameController.getGame(req, res, next);
+      await gameController.getGame(req, res);
 
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(mockGame);
-      expect(next).not.toHaveBeenCalled();
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toEqual(mockGame);
     });
-  });
 
-  describe("given that a non-existing id is given", () => {
-    const req = { params: { id: "123" } };
-    const res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
-    const next = jest.fn();
+    it("should throw a Game not found error if game id does not exist", async () => {
+      const req = { params: { _id: "123" } };
+      const res = fakeRes();
+      const next = jest.fn();
 
-    it("should throw a GameNotExisting error", async () => {
       mockGameModel.findById.mockResolvedValue(null);
 
       await gameController.getGame(req, res, next);
 
-      expect(next).toHaveBeenCalledTimes(1);
-      const err = next.mock.calls[0][0];
-      expect(err).toBeInstanceOf(Error);
-      expect(err.message).toBe("GameNotExisting");
+      expect(next).toHaveBeenCalledWith(new Error("Game not found"));
     });
+  });
+
+  describe("given an invalid id", () => {
+    it("should throw a CastError", async () => {
+      const req = { params: { _id: "invalid_id" } };
+      const res = {};
+      const next = jest.fn();
+
+      mockGameModel.findById.mockRejectedValue(new Error("CastError"));
+
+      await gameController.getGame(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(new Error("CastError"));
+    });
+  });
+});
+
+describe("addGame", () => {
+  describe("given a valid game object", () => {
+    it("should return a valid game object", async () => {
+      const gameObject = { title: "Hollow Knight", releaseYear: 2021 };
+      const req = { body: gameObject };
+      const res = fakeRes();
+
+      mockGameModel.create.mockResolvedValue(gameObject);
+
+      await gameController.addGame(req, res);
+
+      expect(res.statusCode).toBe(201);
+      expect(res.body.game).toEqual(gameObject);
+      expect(res.body.message).toBe("Game added successfully");
+    });
+  });
+
+  describe("given an invalid game object", () => {
+    it("should throw a ValidationError", async () => {
+      const req = { body: {} };
+      const res = fakeRes();
+      const next = jest.fn();
+
+      mockGameModel.create.mockRejectedValue(new Error("ValidationError"));
+      
+      await gameController.addGame(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(new Error("ValidationError"));
+    })
   });
 });
