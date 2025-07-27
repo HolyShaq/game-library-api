@@ -21,11 +21,7 @@ export const makeAuthController = ({ model }) => ({
       const user = await model.create({ username, email, password });
 
       // Issue refresh and access tokens
-      const payload = {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-      };
+      const payload = cleanUser(user);
       const accessToken = generateAccessToken(payload);
       const refreshToken = generateRefreshToken(payload);
 
