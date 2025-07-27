@@ -1,4 +1,9 @@
 # Game Library API
+![Node](https://img.shields.io/badge/node-18.x-brightgreen)
+![Express](https://img.shields.io/badge/express.js-^4.18.2-lightgrey)
+![MongoDB](https://img.shields.io/badge/mongodb-%5E6.0-green)
+![Status](https://img.shields.io/badge/status-active-success)
+![License](https://img.shields.io/badge/license-MIT-blue)
 
 This project is a RESTful API for a game library system, built with Node.js, Express.js, and MongoDB. It provides functionalities for user authentication and for performing CRUD operations on a collection of games.
 
