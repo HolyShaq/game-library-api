@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
+import { cleanUser } from "../utils/cleaner.js";
 
 // Factory for an auth controller
 //    has a dependency injection for the model to be used
@@ -61,11 +62,7 @@ export const makeAuthController = ({ model }) => ({
       if (!validPassword) throw new Error("Invalid credentials");
 
       // Issue refresh and access tokens
-      const payload = {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-      };
+      const payload = cleanUser(user);
       const accessToken = generateAccessToken(payload);
       const refreshToken = generateRefreshToken(payload);
 
@@ -102,11 +99,7 @@ export const makeAuthController = ({ model }) => ({
       );
 
       // Sanitize decoded payload
-      const payload = {
-        id: decoded.id,
-        username: decoded.username,
-        email: decoded.email,
-      };
+      const payload = cleanUser(decoded);
 
       // Generate a new access token with the payload
       const accessToken = generateAccessToken(payload);
