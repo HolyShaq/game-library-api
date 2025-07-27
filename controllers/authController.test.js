@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, jest } from "@jest/globals";
 import { makeAuthController } from "./authController";
 import { mockUserModel, fakeRes } from "../utils/test-tools.js";
+import { cleanUser } from "../utils/cleaner.js";
 
 const authController = makeAuthController({ model: mockUserModel });
 
@@ -33,7 +34,7 @@ describe("register", () => {
 
       expect(res.statusCode).toBe(201);
       expect(res.body.message).toEqual("User registered successfully");
-      expect(res.body.user).toEqual(mockUserDocument);
+      expect(res.body.user).toEqual(cleanUser(mockUserDocument));
       expect(res.body.accessToken).toBeDefined();
     });
 
