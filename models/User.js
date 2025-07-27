@@ -22,13 +22,13 @@ const userSchema = new mongoose.Schema(
       validate: {
         validator: (password) =>
           validator.isStrongPassword(password, {
-            minLength: 6,
+            minLength: 9,
             minNumbers: 1,
             minUppercase: 0,
             minSymbols: 0,
           }),
         message:
-          "Password is not strong enough. It must be at least 6 characters long and contain at least one number.",
+          "Password is not strong enough. It must be at least 9 characters long and contain at least one number.",
       },
     },
   },
