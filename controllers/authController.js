@@ -1,0 +1,22 @@
+// Factory for an auth controller
+//    has a dependency injection for the model to be used
+//    returns an object containing the essential methods for CRUD
+//    hits the User model
+
+export const makeAuthController = ({ model }) => ({
+  register: async (req, res, next) => {
+    try {
+      const { username, email, password } = req.body;
+
+      // Check if email is already in use
+      const existingUser = await model.findOne({ email });
+      if (existingUser) throw new Error("Email already in use");
+
+      // Create new user
+      const user = await model.create({ username, email, password });
+      res.status(201).json({ message: "User registered successfully", user });
+    } catch (err) {
+      next(err);
+    }
+  },
+});
